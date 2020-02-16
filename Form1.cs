@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -74,15 +74,12 @@ namespace FileObfus
 
                 string contents = File.ReadAllText(newPath);
 
-                Regex comments1 = new Regex(@"//.*?\n");
-                Regex comments2 = new Regex(@"/\*(.|\n)*?\*/");
+                Regex comments = new Regex (@"(\/\/.*?(\r?\n|$))|(\/\*(?:[\s\S]*?)\*\/)|(""(?:\\[^\n]|[^""\n])*"")|(@(?:""[^""]*"")+)");
 
-                string afterRemoval = comments1.Replace(contents, "");
-                afterRemoval = comments2.Replace(afterRemoval, "");
+                string afterRemoval = comments.Replace(contents, "");
 
 
-                var utf8 = Encoding.UTF8;
-                byte[] utfBytes = utf8.GetBytes(afterRemoval);
+                byte[] utfBytes = Encoding.UTF8.GetBytes(afterRemoval);
 
                 File.WriteAllText(newPath, String.Empty);
 
